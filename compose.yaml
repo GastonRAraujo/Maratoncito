@@ -1,8 +1,12 @@
 services:
   maratoncito:
     build: .
+    environment:
+      MARATONCITO_DATABASE_URL: sqlite:////data/maratoncito.db
     ports:
       - "${MARATONCITO_BIND_HOST:-127.0.0.1}:${MARATONCITO_PORT:-8000}:8000"
+    volumes:
+      - maratoncito-data:/data
     restart: unless-stopped
     healthcheck:
       test:
@@ -13,3 +17,6 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
+volumes:
+  maratoncito-data:
