@@ -1,9 +1,18 @@
 # Maratoncito
-App web autoalojada para pedir, buscar y descargar películas y series por torrent, con perfiles de audio y subtítulos y grupos de release preferidos por temporada.
 
-## Arranque local
+A self-hosted web app for requesting, searching, and downloading movies and TV shows via torrents, with audio/subtitle profiles and preferred release groups per season.
 
-Requiere Docker con el plugin Compose. Desde la Raspberry Pi o tu equipo de desarrollo:
+The goal is to bring Sonarr, Radarr, Bazarr, and Jellyseerr/Overseerr workflows into one interface while initially relying on Prowlarr for indexers and qBittorrent for downloads.
+
+## Project status
+
+Maratoncito is in its initial scaffolding stage. The current service exposes a health-check endpoint only. Media catalog, discovery, downloads, automation, and request management are planned, not yet implemented.
+
+See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) for component responsibilities, architecture, and delivery phases.
+
+## Local setup
+
+Requires Docker with the Compose plugin. From a Raspberry Pi or another development machine:
 
 ```sh
 cp .env.example .env
@@ -11,12 +20,16 @@ docker compose up --build -d
 curl --fail http://127.0.0.1:8000/health
 ```
 
-La respuesta esperada es `{"status":"ok"}`. Esta base implementa el endpoint de salud.
+Expected response: `{"status":"ok"}`.
 
-El puerto queda publicado en localhost. Para acceder desde otro equipo de tu red, configurá `MARATONCITO_BIND_HOST` con la IP local de la Pi en `.env`. Cambiá `MARATONCITO_PORT` si el 8000 ya está ocupado.
+The service binds to localhost by default. To access it from another device on your LAN, configure `MARATONCITO_BIND_HOST` in `.env` to your host's LAN IP address. Set `MARATONCITO_PORT` if port 8000 is already in use. Do not expose the development endpoint directly to the internet.
 
-Para detener el servicio:
+To stop the service:
 
 ```sh
 docker compose down
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).
