@@ -1,2 +1,15 @@
-**
-!app.py
+**/.git
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/node_modules
+**/*.db
+**/*.sqlite*
+.env
+.env.*
+!.env.example
+backend/tests
+.gitignore
+.github
+README.md
+docs

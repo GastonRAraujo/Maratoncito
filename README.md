@@ -2,17 +2,17 @@
 
 A self-hosted web app for requesting, searching, and downloading movies and TV shows via torrents, with audio/subtitle profiles and preferred release groups per season.
 
-The goal is to bring Sonarr, Radarr, Bazarr, and Jellyseerr/Overseerr workflows into one interface while initially relying on Prowlarr for indexers and qBittorrent for downloads.
+The goal is to combine Sonarr, Radarr, Bazarr, and Jellyseerr/Overseerr workflows in one interface, initially using Prowlarr for indexers and qBittorrent for downloads.
 
-## Project status
+## Status
 
-Maratoncito is in its initial scaffolding stage. The current service exposes a health-check endpoint only. Media catalog, discovery, downloads, automation, and request management are planned, not yet implemented.
+**P0 foundation only.** The web page shows backend status; the API exposes `/health` and `/api/v1/system/status`. Media search, downloads, profiles, and requests are not implemented yet.
 
-See the [implementation plan](docs/IMPLEMENTATION_PLAN.md) for component responsibilities, architecture, and delivery phases.
+- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
+- [Architecture and contracts](docs/ARCHITECTURE.md)
+- [P0 agent workstreams](docs/P0_WORKSTREAMS.md)
 
-## Local setup
-
-Requires Docker with the Compose plugin. From a Raspberry Pi or another development machine:
+## Quick start (Docker Compose)
 
 ```sh
 cp .env.example .env
@@ -20,15 +20,35 @@ docker compose up --build -d
 curl --fail http://127.0.0.1:8000/health
 ```
 
-Expected response: `{"status":"ok"}`.
+Open `http://127.0.0.1:8000` to view the shell. Expected health response: `{"status":"ok"}`. Container startup applies checked-in Alembic migrations to a persistent SQLite volume.
 
-The service binds to localhost by default. To access it from another device on your LAN, configure `MARATONCITO_BIND_HOST` in `.env` to your host's LAN IP address. Set `MARATONCITO_PORT` if port 8000 is already in use. Do not expose the development endpoint directly to the internet.
-
-To stop the service:
+By default, the service listens on localhost. To access it from another device on your LAN, set `MARATONCITO_BIND_HOST` in `.env` to the host LAN IP. Set `MARATONCITO_PORT` to change the port; do not expose the development service directly to the internet.
 
 ```sh
 docker compose down
 ```
+
+## Backend development
+
+Requires Python 3.12+:
+
+```sh
+python -m venv .venv
+. .venv/bin/activate
+pip install -r backend/requirements-dev.txt
+cd backend
+python -m alembic upgrade head
+uvicorn maratoncito.main:app --reload
+```
+
+Run tests from the repository root:
+
+```sh
+python -m pytest -q backend/tests
+python scripts/export_openapi.py --check
+```
+
+Interactive OpenAPI docs are available at `/docs` while the API runs.
 
 ## License
 
