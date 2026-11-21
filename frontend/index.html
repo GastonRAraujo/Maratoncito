@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#17212c" />
     <title>Maratoncito</title>
     <link rel="stylesheet" href="/assets/styles.css" />
     <script type="module" src="/assets/main.js"></script>
@@ -13,22 +12,44 @@
       <header class="hero">
         <p class="eyebrow">Self-hosted media manager</p>
         <h1>Maratoncito</h1>
-        <p>One place to discover, request, select, and manage your movies and shows.</p>
+        <p>Find movies and episodes, inspect releases, and download the one you choose.</p>
+        <span id="connection" class="status">Connecting…</span>
       </header>
-      <section class="panel" aria-labelledby="connection-heading">
-        <div class="panel-heading">
-          <h2 id="connection-heading">System status</h2>
-          <span id="connection" class="status">Connecting…</span>
-        </div>
-        <p id="version" class="secondary">Checking the API…</p>
+      <section class="panel" aria-labelledby="discover-heading">
+        <h2 id="discover-heading">Find a movie or TV show</h2>
+        <form id="catalog-form" class="controls">
+          <label for="query">Title</label>
+          <input id="query" name="q" required minlength="2" maxlength="150" placeholder="Search TMDB" />
+          <label for="kind">Type</label>
+          <select id="kind"><option value="all">All</option><option value="movie">Movie</option><option value="series">TV show</option></select>
+          <button type="submit">Search catalog</button>
+        </form>
+        <div id="catalog" class="stack" aria-live="polite"></div>
       </section>
-      <section class="panel" aria-labelledby="modules-heading">
-        <h2 id="modules-heading">Planned modules</h2>
-        <div id="modules" class="modules" aria-live="polite">
-          <p class="secondary">Loading available capabilities…</p>
-        </div>
+      <section class="panel hidden" id="release-section" aria-labelledby="release-heading">
+        <h2 id="release-heading">Choose a release</h2>
+        <p id="selected-media" class="secondary"></p>
+        <form id="release-form" class="controls">
+          <div id="episode-inputs" class="controls hidden">
+            <label for="season">Season</label><input id="season" type="number" min="0" max="99" value="1" required />
+            <label for="episode">Episode</label><input id="episode" type="number" min="1" max="999" value="1" required />
+          </div>
+          <label for="resolution">Resolution</label>
+          <select id="resolution"><option>1080p</option><option>2160p</option><option>720p</option></select>
+          <button type="submit">Find torrent releases</button>
+        </form>
+        <p class="secondary">Release names are only hints. Actual audio/subtitle tracks are not verified in P1.</p>
+        <div id="releases" class="stack" aria-live="polite"></div>
       </section>
-      <footer>Foundation preview · No media actions are available yet</footer>
+      <section class="panel" aria-labelledby="queue-heading">
+        <div class="heading-row">
+          <h2 id="queue-heading">Download queue</h2>
+          <button id="refresh" class="secondary-button" type="button">Refresh</button>
+        </div>
+        <div id="queue" class="stack" aria-live="polite"></div>
+      </section>
+      <p id="notice" role="status" aria-live="polite"></p>
+      <footer>Phase P1 · Manual search and download · No automated monitoring yet</footer>
     </main>
   </body>
 </html>

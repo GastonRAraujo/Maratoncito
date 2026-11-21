@@ -4,25 +4,33 @@ A self-hosted web app for requesting, searching, and downloading movies and TV s
 
 The goal is to combine Sonarr, Radarr, Bazarr, and Jellyseerr/Overseerr workflows in one interface, initially using Prowlarr for indexers and qBittorrent for downloads.
 
-## Status
+## Current status
 
-**P0 foundation only.** The web page shows backend status; the API exposes `/health` and `/api/v1/system/status`. Media search, downloads, profiles, and requests are not implemented yet.
+**P1 manual search and download development.** The web UI allows TMDB media search, Prowlarr release discovery with explicit selection reasons, and manual qBittorrent torrent submission and progress (when external services are configured).
 
-- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
-- [Architecture and contracts](docs/ARCHITECTURE.md)
-- [P0 agent workstreams](docs/P0_WORKSTREAMS.md)
+Automatic monitoring, persistent profile rules, audio/subtitle verification, file import, and user requests are **not yet implemented**.
 
-## Quick start (Docker Compose)
+- [Implementation roadmap](docs/IMPLEMENTATION_PLAN.md)
+- [P1 status and limitations](docs/P1_PROGRESS.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Agent ownership](docs/P0_WORKSTREAMS.md)
+
+## Run with Docker Compose
+
+The application needs existing **Prowlarr** and **qBittorrent** instances, plus a TMDB API key. Prowlarr aggregates tracker searches; qBittorrent transfers the selected torrents.
 
 ```sh
 cp .env.example .env
+# Edit .env with TMDB_API_KEY, PROWLARR_API_KEY, and qBittorrent connection values.
 docker compose up --build -d
 curl --fail http://127.0.0.1:8000/health
 ```
 
-Open `http://127.0.0.1:8000` to view the shell. Expected health response: `{"status":"ok"}`. Container startup applies checked-in Alembic migrations to a persistent SQLite volume.
+Open `http://127.0.0.1:8000`, search a title, choose a movie or an individual TV episode, and inspect release scores before downloading. `/docs` contains the OpenAPI reference.
 
-By default, the service listens on localhost. To access it from another device on your LAN, set `MARATONCITO_BIND_HOST` in `.env` to the host LAN IP. Set `MARATONCITO_PORT` to change the port; do not expose the development service directly to the internet.
+The Docker Compose network resolves `host.docker.internal` to the host gateway on Linux. Prowlarr and qBittorrent must listen on addresses reachable from that gateway, not only on the host's loopback interface. **Use qBittorrent credentials**, and make sure qBittorrent can resolve the download links returned by Prowlarr. Neither provider is added as a Compose service by default.
+
+The application itself has no login mechanism. **Do not expose its port to the public internet.** The `MARATONCITO_BIND_HOST` default remains `127.0.0.1`.
 
 ```sh
 docker compose down
@@ -30,7 +38,7 @@ docker compose down
 
 ## Backend development
 
-Requires Python 3.12+:
+Python 3.12+:
 
 ```sh
 python -m venv .venv
@@ -41,14 +49,12 @@ python -m alembic upgrade head
 uvicorn maratoncito.main:app --reload
 ```
 
-Run tests from the repository root:
+Test from the repository root:
 
 ```sh
 python -m pytest -q backend/tests
 python scripts/export_openapi.py --check
 ```
-
-Interactive OpenAPI docs are available at `/docs` while the API runs.
 
 ## License
 
