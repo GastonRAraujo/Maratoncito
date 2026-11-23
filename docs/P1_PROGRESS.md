@@ -1,6 +1,6 @@
 # P1 — Manual Media Discovery and Torrent Downloads
 
-**Status:** First end-to-end implementation proposed for review. It is not a release.
+**Status:** The first end-to-end implementation merged in [PR #4](https://github.com/GastonRAraujo/Maratoncito/pull/4). Live-provider and Raspberry Pi 5 ARM64 validation remain pending. See the [P0–P4 roadmap](IMPLEMENTATION_PLAN.md) for the phase gates.
 
 ## Implemented workstreams
 
@@ -51,6 +51,6 @@ Release search requires a specific episode for TV; season packs are rejected unt
 - [x] Code for exact manual grab and qBittorrent category progress.
 - [x] Web UI surfaces these workflows.
 - [x] Mock TMDB, Prowlarr and qBittorrent tests added.
-- [ ] PR CI passing, including image build.
+- [x] PR CI reported passing in the implementation handoff, including image build.
 - [ ] Tested manually with real TMDB, Prowlarr and qBittorrent credentials.
 - [ ] Raspberry Pi 5 ARM64 smoke test.

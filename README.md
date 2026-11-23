@@ -6,11 +6,11 @@ The goal is to combine Sonarr, Radarr, Bazarr, and Jellyseerr/Overseerr workflow
 
 ## Current status
 
-**P1 manual search and download development.** The web UI allows TMDB media search, Prowlarr release discovery with explicit selection reasons, and manual qBittorrent torrent submission and progress (when external services are configured).
+**P0 foundation and P1 manual search and download are merged.** Live-provider and Raspberry Pi 5 ARM64 validation remain pending. The web UI allows TMDB media search, Prowlarr release discovery with explicit selection reasons, and manual qBittorrent torrent submission and progress (when external services are configured).
 
 Automatic monitoring, persistent profile rules, audio/subtitle verification, file import, and user requests are **not yet implemented**.
 
-- [Implementation roadmap](docs/IMPLEMENTATION_PLAN.md)
+- [P0–P4 implementation roadmap](docs/IMPLEMENTATION_PLAN.md)
 - [P1 status and limitations](docs/P1_PROGRESS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Agent ownership](docs/P0_WORKSTREAMS.md)
