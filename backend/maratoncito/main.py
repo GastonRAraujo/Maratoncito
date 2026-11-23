@@ -1,4 +1,4 @@
-"""HTTP application entrypoint. Feature endpoints land in later phases."""
+"""HTTP application entrypoint."""
 
 from pathlib import Path
 
@@ -8,6 +8,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict
 
 from . import __version__
+from .api import router
+from .services import get_service
 
 
 class SystemStatus(BaseModel):
@@ -20,6 +22,7 @@ class SystemStatus(BaseModel):
 
 
 app = FastAPI(title="Maratoncito API", version=__version__)
+app.include_router(router)
 
 
 @app.get("/health", tags=["system"])
@@ -32,17 +35,8 @@ def system_status() -> SystemStatus:
     return SystemStatus(
         name="Maratoncito",
         version=__version__,
-        status="scaffold",
-        capabilities={
-            "metadata": False,
-            "indexers": False,
-            "selection": False,
-            "downloads": False,
-            "library": False,
-            "automation": False,
-            "requests": False,
-            "subtitles": False,
-        },
+        status="p1-development",
+        capabilities=get_service().capabilities(),
     )
 
 

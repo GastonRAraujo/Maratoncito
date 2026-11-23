@@ -36,3 +36,5 @@ jobs:
         run: docker compose -f compose.yaml config --quiet
       - name: Build container
         run: docker build -t maratoncito:test .
+      - name: Check browser JavaScript syntax
+        run: node --check frontend/main.js
